@@ -3,7 +3,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import json
 import os
 
-TOKEN = "8612254908:AAGMUy6THtXV3UlgI4LiPMkKPDAk2w_FCIw"
+TOKEN = os.environ.get("TOKEN")
 FANVUE_LINK = "https://fanvue.com/camilasoto"
 FOTO = "foto.jpg"
 ARCHIVO_USUARIOS = "usuarios.json"
