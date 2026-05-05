@@ -71,7 +71,6 @@ def cargar_usuarios():
             return {str(chat_id): {"ultima_foto": None} for chat_id in datos}
 
         return datos
-
     except Exception:
         return {}
 
@@ -159,8 +158,19 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Comandos disponibles:\n\n"
         "/start - Ver contenido\n"
+        "/test - Probar recordatorio ahora\n"
         "/stop - Detener mensajes"
     )
+
+
+async def test(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = str(update.effective_chat.id)
+
+    usuarios.setdefault(chat_id, {"ultima_foto": None})
+    guardar_usuarios()
+
+    mensaje = random.choice(MENSAJES_RECORDATORIO)
+    await enviar_contenido(chat_id, context, mensaje)
 
 
 async def recordatorio(context: ContextTypes.DEFAULT_TYPE):
@@ -174,7 +184,6 @@ async def recordatorio(context: ContextTypes.DEFAULT_TYPE):
             guardar_usuarios()
 
 
-# Mini web para que Render detecte puerto y UptimeRobot pueda mantenerlo despierto
 app_web = Flask(__name__)
 
 
@@ -197,6 +206,7 @@ def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("test", test))
     app.add_handler(CommandHandler("stop", stop))
     app.add_handler(CommandHandler("help", help_command))
 
